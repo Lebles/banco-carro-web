@@ -1,0 +1,15 @@
+.img_show img {height: 200px; transition: opacity 0.3s ease-in-out;}
+.img_show img:hover {opacity: 0.3;}
+.img_show div {
+    display: none;
+    position: absolute;
+    font-weight: bold;
+    height: 200px;
+    background-color: red;
+    z-index: -1;
+}
+.img_show:hover div {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
