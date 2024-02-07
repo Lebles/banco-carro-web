@@ -63,43 +63,8 @@ export default function Main() {
     window.location.assign('/list');
   }
   //#endregion done
-  
-  const qr_ref = useRef(null);
-  if (waiting === 2) {
-    const downloadQRCode = () => {
-      if (qr_ref.current) {
-        html2canvas(qr_ref.current)
-          .then((canvas) => {
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = `qrcode_item_${formData.id ? formData.id : 'nuevo'}.png`;
-            link.click();
-          })
-          .catch((error) => {
-            console.error('Error generating QR code:', error);
-          });
-      }
-    };
-    
-    const qrData = {...formData, id: undefined, modified: undefined};
-    return (<UIPage>
-      <div style={{display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
-      <div>
-        <div style={{textAlign: 'center', padding: 20}} ref={qr_ref}>
-          <img src={process.env.PUBLIC_URL+"BCaribeLogo_color.png"}
-          alt='logo_qr' height={80} style={{margin: -10}}/><br/>
-          <QRCode value={JSON.stringify(qrData)}/>
-        </div>
-        <div style={{textAlign: 'center'}}>
-          <label className='button' onClick={downloadQRCode}>Descargar</label>
-          <label className='button' onClick={() => setWaiting(0)}>Volver</label>
-        </div>
-      </div>
-      </div>
-    </UIPage>);
-  }
 
-  if (waiting) {
+  if (waiting === 1) {
     return (<UIPage>
       <h3 style={{margin: 30}}>Esperando Resultados</h3>
     </UIPage>);
@@ -155,6 +120,7 @@ export default function Main() {
       <ImageUploader enviroment={img_admin}/></div>
     </div>
   </div>
+  {waiting === 2 && (<DownloadableQR formData={formData}/>)}
   </UIPage>);
 }
 
@@ -172,4 +138,39 @@ function readFileAsBase64(file) {
 
     reader.readAsDataURL(file);
   });
+}
+
+function DownloadableQR({formData}) {
+  const qr_ref = useRef(null); //
+
+  const downloadQRCode = () => {
+    if (qr_ref.current) {
+      html2canvas(qr_ref.current)
+        .then((canvas) => {
+          const link = document.createElement('a');
+          link.href = canvas.toDataURL('image/png');
+          link.download = `qrcode_item_${formData.id ? formData.id : 'nuevo'}.png`;
+          link.click();
+        })
+        .catch((error) => {
+          console.error('Error generating QR code:', error);
+        });
+    }
+  };
+  
+  const qrData = {...formData, id: undefined, modified: undefined};
+
+  return (
+    <div style={{display: 'flex', height: 500, justifyContent: 'center', alignItems: 'center'}}>
+    <div>
+      <div style={{textAlign: 'center', padding: 20}} ref={qr_ref}>
+        <img src={process.env.PUBLIC_URL+"BCaribeLogo_color.png"}
+        alt='logo_qr' height={80} style={{margin: -10}}/><br/>
+        <QRCode value={JSON.stringify(qrData)}/>
+      </div>
+      <div style={{textAlign: 'center'}}>
+        <label className='button' onClick={downloadQRCode}>Descargar</label>
+      </div>
+    </div>
+    </div>);
 }

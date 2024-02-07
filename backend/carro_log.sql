@@ -14,6 +14,17 @@ END;*/
 	else null
 end;*/
 
+/*create table carros (
+	id int identity(1,1) primary key,
+	valor int,
+	marca varchar(32),
+	modelo varchar(32),
+	submodelo varchar(32),
+	tipo varchar(32),
+	anno int,
+	modified datetime default getdate()
+);*/
+
 select * from carros;
 
 /*INSERT INTO carros (valor, marca, modelo, submodelo, tipo, anno) VALUES
